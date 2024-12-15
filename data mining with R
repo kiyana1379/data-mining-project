@@ -1,0 +1,1361 @@
+Here, we install and use some required packages.
+#install.packages("pacman")
+#install.packages("stargazer")
+library("pacman")
+## Warning: package 'pacman' was built under R version 4.4.2
+library(VIM)
+## Warning: package 'VIM' was built under R version 4.4.2
+## Loading required package: colorspace
+## Loading required package: grid
+## VIM is ready to use.
+## Suggestions and bug-reports can be submitted at: https://github.com/statistikat/VIM/issues
+## 
+## Attaching package: 'VIM'
+## The following object is masked from 'package:datasets':
+## 
+##     sleep
+library(dplyr)
+## 
+## Attaching package: 'dplyr'
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+library(car)
+## Warning: package 'car' was built under R version 4.4.2
+## Loading required package: carData
+## Warning: package 'carData' was built under R version 4.4.2
+## 
+## Attaching package: 'car'
+## The following object is masked from 'package:dplyr':
+## 
+##     recode
+library(stargazer)
+## 
+## Please cite as:
+##  Hlavac, Marek (2022). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+##  R package version 5.2.3. https://CRAN.R-project.org/package=stargazer
+library(VIM)
+library(ggplot2)
+library(lmtest)
+## Warning: package 'lmtest' was built under R version 4.4.2
+## Loading required package: zoo
+## 
+## Attaching package: 'zoo'
+## The following objects are masked from 'package:base':
+## 
+##     as.Date, as.Date.numeric
+Read the data.
+Q250 is our dependent variable. It is from 1 to 10. 1 is the least part and 10 is the best part. It shows the desire of people to democracy.
+wvs=read.csv("C:/Users/NoteBook/Desktop/WVS_Cross-National_Wave_7_csv_v6_0.csv")
+names(wvs)
+##   [1] "version"                    "doi"                       
+##   [3] "A_WAVE"                     "A_YEAR"                    
+##   [5] "A_STUDY"                    "B_COUNTRY"                 
+##   [7] "B_COUNTRY_ALPHA"            "C_COW_NUM"                 
+##   [9] "C_COW_ALPHA"                "D_INTERVIEW"               
+##  [11] "S007"                       "J_INTDATE"                 
+##  [13] "FW_START"                   "FW_END"                    
+##  [15] "K_TIME_START"               "K_TIME_END"                
+##  [17] "K_DURATION"                 "Q_MODE"                    
+##  [19] "N_REGION_ISO"               "N_REGION_WVS"              
+##  [21] "N_REGION_NUTS2"             "N_REG_NUTS1"               
+##  [23] "N_TOWN"                     "G_TOWNSIZE"                
+##  [25] "G_TOWNSIZE2"                "H_SETTLEMENT"              
+##  [27] "H_URBRURAL"                 "I_PSU"                     
+##  [29] "O1_LONGITUDE"               "O2_LATITUDE"               
+##  [31] "L_INTERVIEWER_NUMBER"       "S_INTLANGUAGE"             
+##  [33] "LNGE_ISO"                   "E_RESPINT"                 
+##  [35] "F_INTPRIVACY"               "E1_LITERACY"               
+##  [37] "W_WEIGHT"                   "S018"                      
+##  [39] "PWGHT"                      "S025"                      
+##  [41] "Q1"                         "Q2"                        
+##  [43] "Q3"                         "Q4"                        
+##  [45] "Q5"                         "Q6"                        
+##  [47] "Q7"                         "Q8"                        
+##  [49] "Q9"                         "Q10"                       
+##  [51] "Q11"                        "Q12"                       
+##  [53] "Q13"                        "Q14"                       
+##  [55] "Q15"                        "Q16"                       
+##  [57] "Q17"                        "Q18"                       
+##  [59] "Q19"                        "Q20"                       
+##  [61] "Q21"                        "Q22"                       
+##  [63] "Q23"                        "Q24"                       
+##  [65] "Q25"                        "Q26"                       
+##  [67] "Q27"                        "Q28"                       
+##  [69] "Q29"                        "Q30"                       
+##  [71] "Q31"                        "Q32"                       
+##  [73] "Q33"                        "Q33_3"                     
+##  [75] "Q34"                        "Q34_3"                     
+##  [77] "Q35"                        "Q35_3"                     
+##  [79] "Q36"                        "Q37"                       
+##  [81] "Q38"                        "Q39"                       
+##  [83] "Q40"                        "Q41"                       
+##  [85] "Q42"                        "Q43"                       
+##  [87] "Q44"                        "Q45"                       
+##  [89] "Q46"                        "Q47"                       
+##  [91] "Q48"                        "Q49"                       
+##  [93] "Q50"                        "Q51"                       
+##  [95] "Q52"                        "Q53"                       
+##  [97] "Q54"                        "Q55"                       
+##  [99] "Q56"                        "Q57"                       
+## [101] "Q58"                        "Q59"                       
+## [103] "Q60"                        "Q61"                       
+## [105] "Q62"                        "Q63"                       
+## [107] "Q64"                        "Q65"                       
+## [109] "Q66"                        "Q67"                       
+## [111] "Q68"                        "Q69"                       
+## [113] "Q70"                        "Q71"                       
+## [115] "Q72"                        "Q73"                       
+## [117] "Q74"                        "Q75"                       
+## [119] "Q76"                        "Q77"                       
+## [121] "Q78"                        "Q79"                       
+## [123] "Q80"                        "Q81"                       
+## [125] "Q82"                        "Q82_AFRICANUNION"          
+## [127] "Q82_APEC"                   "Q82_ARABLEAGUE"            
+## [129] "Q82_ASEAN"                  "Q82_CIS"                   
+## [131] "Q82_CUSMA"                  "Q82_ECO"                   
+## [133] "Q82_EU"                     "Q82_GULFCOOP"              
+## [135] "Q82_ISLCOOP"                "Q82_MERCOSUR"              
+## [137] "Q82_NAFTA"                  "Q82_OAS"                   
+## [139] "Q82_SAARC"                  "Q82_SCO"                   
+## [141] "Q82_TLC"                    "Q82_UNDP"                  
+## [143] "Q83"                        "Q84"                       
+## [145] "Q85"                        "Q86"                       
+## [147] "Q87"                        "Q88"                       
+## [149] "Q89"                        "Q90"                       
+## [151] "Q91"                        "Q92"                       
+## [153] "Q93"                        "Q94"                       
+## [155] "Q94R"                       "Q95"                       
+## [157] "Q95R"                       "Q96"                       
+## [159] "Q96R"                       "Q97"                       
+## [161] "Q97R"                       "Q98"                       
+## [163] "Q98R"                       "Q99"                       
+## [165] "Q99R"                       "Q100"                      
+## [167] "Q100R"                      "Q101"                      
+## [169] "Q101R"                      "Q102"                      
+## [171] "Q102R"                      "Q103"                      
+## [173] "Q103R"                      "Q104"                      
+## [175] "Q104R"                      "Q105"                      
+## [177] "Q105R"                      "Q106"                      
+## [179] "Q107"                       "Q108"                      
+## [181] "Q109"                       "Q110"                      
+## [183] "Q111"                       "Q112"                      
+## [185] "Q113"                       "Q114"                      
+## [187] "Q115"                       "Q116"                      
+## [189] "Q117"                       "Q118"                      
+## [191] "Q119"                       "Q120"                      
+## [193] "Q121"                       "Q122"                      
+## [195] "Q123"                       "Q124"                      
+## [197] "Q125"                       "Q126"                      
+## [199] "Q127"                       "Q128"                      
+## [201] "Q129"                       "Q130"                      
+## [203] "Q131"                       "Q132"                      
+## [205] "Q133"                       "Q134"                      
+## [207] "Q135"                       "Q136"                      
+## [209] "Q137"                       "Q138"                      
+## [211] "Q139"                       "Q140"                      
+## [213] "Q141"                       "Q142"                      
+## [215] "Q143"                       "Q144"                      
+## [217] "Q145"                       "Q146"                      
+## [219] "Q147"                       "Q148"                      
+## [221] "Q149"                       "Q150"                      
+## [223] "Q151"                       "Q152"                      
+## [225] "Q153"                       "Q154"                      
+## [227] "Q155"                       "Q156"                      
+## [229] "Q157"                       "Q158"                      
+## [231] "Q159"                       "Q160"                      
+## [233] "Q161"                       "Q162"                      
+## [235] "Q163"                       "Q164"                      
+## [237] "Q165"                       "Q166"                      
+## [239] "Q167"                       "Q168"                      
+## [241] "Q169"                       "Q170"                      
+## [243] "Q171"                       "Q172"                      
+## [245] "Q172R"                      "Q173"                      
+## [247] "Q174"                       "Q175"                      
+## [249] "Q176"                       "Q177"                      
+## [251] "Q178"                       "Q179"                      
+## [253] "Q180"                       "Q181"                      
+## [255] "Q182"                       "Q183"                      
+## [257] "Q184"                       "Q185"                      
+## [259] "Q186"                       "Q187"                      
+## [261] "Q188"                       "Q189"                      
+## [263] "Q190"                       "Q191"                      
+## [265] "Q192"                       "Q193"                      
+## [267] "Q194"                       "Q195"                      
+## [269] "Q196"                       "Q197"                      
+## [271] "Q198"                       "Q199"                      
+## [273] "Q200"                       "Q201"                      
+## [275] "Q202"                       "Q203"                      
+## [277] "Q204"                       "Q205"                      
+## [279] "Q206"                       "Q207"                      
+## [281] "Q208"                       "Q209"                      
+## [283] "Q210"                       "Q211"                      
+## [285] "Q212"                       "Q213"                      
+## [287] "Q214"                       "Q215"                      
+## [289] "Q216"                       "Q217"                      
+## [291] "Q218"                       "Q219"                      
+## [293] "Q220"                       "Q221"                      
+## [295] "Q222"                       "Q223"                      
+## [297] "Q223_ABREV"                 "Q223_LOCAL"                
+## [299] "Q224"                       "Q225"                      
+## [301] "Q226"                       "Q227"                      
+## [303] "Q228"                       "Q229"                      
+## [305] "Q230"                       "Q231"                      
+## [307] "Q232"                       "Q233"                      
+## [309] "Q234"                       "Q234A"                     
+## [311] "Q235"                       "Q236"                      
+## [313] "Q237"                       "Q238"                      
+## [315] "Q239"                       "Q240"                      
+## [317] "Q241"                       "Q242"                      
+## [319] "Q243"                       "Q244"                      
+## [321] "Q245"                       "Q246"                      
+## [323] "Q247"                       "Q248"                      
+## [325] "Q249"                       "Q250"                      
+## [327] "Q251"                       "Q252"                      
+## [329] "Q253"                       "Q254"                      
+## [331] "Q255"                       "Q256"                      
+## [333] "Q257"                       "Q258"                      
+## [335] "Q259"                       "Q260"                      
+## [337] "Q261"                       "Q262"                      
+## [339] "X003R"                      "X003R2"                    
+## [341] "Q263"                       "Q264"                      
+## [343] "V002"                       "Q265"                      
+## [345] "V001"                       "Q266"                      
+## [347] "X002_02B"                   "Q267"                      
+## [349] "V002A_01"                   "Q268"                      
+## [351] "V001A_01"                   "Q269"                      
+## [353] "Q270"                       "Q271"                      
+## [355] "Q272"                       "Q273"                      
+## [357] "Q274"                       "Q275"                      
+## [359] "Q275A"                      "Q275R"                     
+## [361] "Q276"                       "Q276A"                     
+## [363] "Q276R"                      "Q277"                      
+## [365] "Q277A"                      "Q277R"                     
+## [367] "Q278"                       "Q278A"                     
+## [369] "Q278R"                      "Q279"                      
+## [371] "Q280"                       "Q281"                      
+## [373] "Q282"                       "Q283"                      
+## [375] "Q284"                       "Q285"                      
+## [377] "Q286"                       "Q287"                      
+## [379] "Q288"                       "Q288R"                     
+## [381] "Q289"                       "Q289CS9"                   
+## [383] "Q290"                       "Q291G1"                    
+## [385] "Q291G2"                     "Q291G3"                    
+## [387] "Q291G4"                     "Q291G5"                    
+## [389] "Q291G6"                     "Q291P1"                    
+## [391] "Q291P2"                     "Q291P3"                    
+## [393] "Q291P4"                     "Q291P5"                    
+## [395] "Q291P6"                     "Q291UN1"                   
+## [397] "Q291UN2"                    "Q291UN3"                   
+## [399] "Q291UN4"                    "Q291UN5"                   
+## [401] "Q291UN6"                    "Q292A"                     
+## [403] "Q292B"                      "Q292C"                     
+## [405] "Q292D"                      "Q292E"                     
+## [407] "Q292F"                      "Q292G"                     
+## [409] "Q292H"                      "Q292I"                     
+## [411] "Q292J"                      "Q292K"                     
+## [413] "Q292L"                      "Q292M"                     
+## [415] "Q292N"                      "Q292O"                     
+## [417] "Q293"                       "Q294A"                     
+## [419] "Q294B"                      "Y001"                      
+## [421] "Y002"                       "Y003"                      
+## [423] "SACSECVAL"                  "RESEMAVAL"                 
+## [425] "I_AUTHORITY"                "I_NATIONALISM"             
+## [427] "I_DEVOUT"                   "DEFIANCE"                  
+## [429] "I_RELIGIMP"                 "I_RELIGBEL"                
+## [431] "I_RELIGPRAC"                "DISBELIEF"                 
+## [433] "I_NORM1"                    "I_NORM2"                   
+## [435] "I_NORM3"                    "RELATIVISM"                
+## [437] "I_TRUSTARMY"                "I_TRUSTPOLICE"             
+## [439] "I_TRUSTCOURTS"              "SCEPTICISM"                
+## [441] "I_INDEP"                    "I_IMAGIN"                  
+## [443] "I_NONOBED"                  "AUTONOMY"                  
+## [445] "I_WOMJOB"                   "I_WOMPOL"                  
+## [447] "I_WOMEDU"                   "EQUALITY"                  
+## [449] "I_HOMOLIB"                  "I_ABORTLIB"                
+## [451] "I_DIVORLIB"                 "CHOICE"                    
+## [453] "I_VOICE1"                   "I_VOICE2"                  
+## [455] "I_VOI2_00"                  "VOICE"                     
+## [457] "SECVALWGT"                  "RESEMAVALWGT"              
+## [459] "fhregion"                   "polregfh"                  
+## [461] "freestfh"                   "prfhrat"                   
+## [463] "prfhscore"                  "clfhrat"                   
+## [465] "clfhscore"                  "democ"                     
+## [467] "autoc"                      "polity"                    
+## [469] "durable"                    "regtype"                   
+## [471] "ruleoflaw"                  "corrupttransp"             
+## [473] "electintegr"                "btiregion"                 
+## [475] "btistatus"                  "btidemstatus"              
+## [477] "btistate"                   "btipolpart"                
+## [479] "btiruleoflaw"               "btistability"              
+## [481] "btiintegration"             "btimarket"                 
+## [483] "btigovindex"                "btigoveperform"            
+## [485] "btiregime"                  "regionWB"                  
+## [487] "incomeWB"                   "landWB"                    
+## [489] "GDPpercap1"                 "GDPpercap2"                
+## [491] "giniWB"                     "incrichest10p"             
+## [493] "popWB1990"                  "popWB2000"                 
+## [495] "popWB2019"                  "lifeexpect"                
+## [497] "popgrowth"                  "urbanpop"                  
+## [499] "laborforce"                 "deathrate"                 
+## [501] "unemployfem"                "unemploymale"              
+## [503] "unemploytotal"              "accessclfuel"              
+## [505] "accesselectr"               "renewelectr"               
+## [507] "co2emis"                    "co2percap"                 
+## [509] "easeofbusiness"             "militaryexp"               
+## [511] "Trade"                      "healthexp"                 
+## [513] "educationexp"               "medageun"                  
+## [515] "meanschooling"              "educationHDI"              
+## [517] "compulseduc"                "GII"                       
+## [519] "DGI"                        "womenparl"                 
+## [521] "hdi"                        "incomeindexHDI"            
+## [523] "humanineqiality"            "lifeexpectHDI"             
+## [525] "homiciderate"               "Refugeesorigin"            
+## [527] "internetusers"              "mobphone"                  
+## [529] "migrationrate"              "schoolgpi"                 
+## [531] "femchoutsch"                "choutsch"                  
+## [533] "v2x_polyarchy"              "v2x_libdem"                
+## [535] "v2x_partipdem"              "v2x_delibdem"              
+## [537] "v2x_egaldem"                "v2x_freexp_altinf"         
+## [539] "v2x_frassoc_thick"          "v2xel_frefair"             
+## [541] "v2xcl_rol"                  "v2x_cspart"                
+## [543] "v2xeg_eqdr"                 "v2excrptps"                
+## [545] "v2exthftps"                 "v2juaccnt"                 
+## [547] "v2cltrnslw"                 "v2clacjust"                
+## [549] "v2clsocgrp"                 "v2clacfree"                
+## [551] "v2clrelig"                  "v2csrlgrep"                
+## [553] "v2mecenefm"                 "v2mecenefi"                
+## [555] "v2mebias"                   "v2pepwrses"                
+## [557] "v2pepwrgen"                 "v2peedueq"                 
+## [559] "v2pehealth"                 "v2peapsecon"               
+## [561] "v2peasjsoecon"              "v2clgencl"                 
+## [563] "v2peasjgen"                 "v2peasbgen"                
+## [565] "v2cafres"                   "v2cafexch"                 
+## [567] "v2x_corr"                   "v2x_gender"                
+## [569] "v2x_gencl"                  "v2x_genpp"                 
+## [571] "v2x_rule"                   "v2xcl_acjst"               
+## [573] "td_voiacc"                  "td_polstab"                
+## [575] "td_goveff"                  "td_regqual"                
+## [577] "td_rulelaw"                 "td_ctrlcorr"               
+## [579] "ID_GPS"                     "ID_PartyFacts"             
+## [581] "Partyname"                  "Partyabb"                  
+## [583] "CPARTY"                     "CPARTYABB"                 
+## [585] "Type_Values"                "Type_Populism"             
+## [587] "Type_Populist_Values"       "Type_Partysize_vote"       
+## [589] "Type_Partysize_seat"        "GPS_V4_Scale"              
+## [591] "GPS_V6_Scale"               "GPS_V8_Scale"              
+## [593] "GPS_V9"                     "GPS_V10"                   
+## [595] "GPS_V11"                    "GPS_V12"                   
+## [597] "GPS_V13"                    "GPS_V14"                   
+## [599] "GPS_V15"                    "GPS_V16"                   
+## [601] "GPS_V17"                    "WVS_LR_PartyVoter"         
+## [603] "WVS_LibCon_PartyVoter"      "WVS_Polmistrust_PartyVoter"
+## [605] "WVS_LR_MedianVoter"         "WVS_LibCon_MedianVoter"    
+## [607] "v2psbars"                   "v2psorgs"                  
+## [609] "v2psprbrch"                 "v2psprlnks"                
+## [611] "v2psplats"                  "v2xnp_client"              
+## [613] "v2xps_party"
+p_load(dplyr, countrycode)
+## 0.1 select variables:
+wvs <- wvs %>%
+  dplyr::select(Q250, B_COUNTRY_ALPHA, GDPpercap1, popWB2019, internetusers,
+                urbanpop, freestfh, durable, Q260, Q262, Q263,
+                Q49, Q71, Q112, Q131, Q148, Q163, Q184, Q192, Q197,
+                Q199, Q206, Q207, Q209, Q211, Q240, Q252)
+
+
+Here, we convert meaningless variables to NA.
+wvs <- wvs %>%
+  mutate_all(~ ifelse(. %in% c(-1, -2, -4, -5, -9999), NA, .))
+
+summary(wvs)
+##       Q250        B_COUNTRY_ALPHA      GDPpercap1       popWB2019        
+##  Min.   : 1.000   Length:97220       Min.   :     0   Min.   :7.714e+04  
+##  1st Qu.: 7.000   Class :character   1st Qu.:  8996   1st Qu.:1.067e+07  
+##  Median : 9.000   Mode  :character   Median : 16785   Median :3.759e+07  
+##  Mean   : 8.382                      Mean   : 26035   Mean   :1.317e+08  
+##  3rd Qu.:10.000                      3rd Qu.: 42576   3rd Qu.:1.081e+08  
+##  Max.   :10.000                      Max.   :129103   Max.   :1.398e+09  
+##  NA's   :1800                        NA's   :447      NA's   :1670       
+##  internetusers      urbanpop         freestfh        durable      
+##  Min.   :15.00   Min.   : 21.23   Min.   : 9.00   Min.   :  0.00  
+##  1st Qu.:46.90   1st Qu.: 54.08   1st Qu.:32.00   1st Qu.: 13.00  
+##  Median :67.50   Median : 74.59   Median :61.00   Median : 26.00  
+##  Mean   :63.65   Mean   : 68.50   Mean   :58.59   Mean   : 43.03  
+##  3rd Qu.:84.60   3rd Qu.: 83.65   3rd Qu.:86.00   3rd Qu.: 61.00  
+##  Max.   :95.90   Max.   :100.00   Max.   :99.00   Max.   :209.00  
+##  NA's   :3820    NA's   :1670     NA's   :2597    NA's   :7911    
+##       Q260            Q262             Q263            Q49        
+##  Min.   :1.000   Min.   : 16.00   Min.   :1.000   Min.   : 1.000  
+##  1st Qu.:1.000   1st Qu.: 29.00   1st Qu.:1.000   1st Qu.: 6.000  
+##  Median :2.000   Median : 41.00   Median :1.000   Median : 7.000  
+##  Mean   :1.526   Mean   : 43.18   Mean   :1.058   Mean   : 7.062  
+##  3rd Qu.:2.000   3rd Qu.: 55.00   3rd Qu.:1.000   3rd Qu.: 9.000  
+##  Max.   :2.000   Max.   :103.00   Max.   :2.000   Max.   :10.000  
+##  NA's   :95      NA's   :511      NA's   :384     NA's   :520     
+##       Q71             Q112             Q131            Q148      
+##  Min.   :1.000   Min.   : 1.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:2.000   1st Qu.: 6.000   1st Qu.:1.000   1st Qu.:1.000  
+##  Median :3.000   Median : 8.000   Median :2.000   Median :2.000  
+##  Mean   :2.624   Mean   : 7.598   Mean   :2.007   Mean   :2.282  
+##  3rd Qu.:3.000   3rd Qu.:10.000   3rd Qu.:2.000   3rd Qu.:3.000  
+##  Max.   :4.000   Max.   :10.000   Max.   :4.000   Max.   :4.000  
+##  NA's   :3137    NA's   :1645     NA's   :670     NA's   :6894   
+##       Q163             Q184             Q192             Q197      
+##  Min.   : 1.000   Min.   : 1.000   Min.   : 1.000   Min.   :1.000  
+##  1st Qu.: 5.000   1st Qu.: 1.000   1st Qu.: 1.000   1st Qu.:2.000  
+##  Median : 8.000   Median : 2.000   Median : 1.000   Median :3.000  
+##  Mean   : 7.095   Mean   : 3.554   Mean   : 1.789   Mean   :2.899  
+##  3rd Qu.: 9.000   3rd Qu.: 5.000   3rd Qu.: 1.000   3rd Qu.:4.000  
+##  Max.   :10.000   Max.   :10.000   Max.   :10.000   Max.   :4.000  
+##  NA's   :2711     NA's   :2275     NA's   :4523     NA's   :4338   
+##       Q199           Q206            Q207            Q209            Q211      
+##  Min.   :1.00   Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:2.00   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:2.000  
+##  Median :3.00   Median :2.000   Median :2.000   Median :2.000   Median :3.000  
+##  Mean   :2.66   Mean   :2.516   Mean   :2.678   Mean   :2.179   Mean   :2.357  
+##  3rd Qu.:3.00   3rd Qu.:5.000   3rd Qu.:5.000   3rd Qu.:3.000   3rd Qu.:3.000  
+##  Max.   :4.00   Max.   :5.000   Max.   :5.000   Max.   :3.000   Max.   :3.000  
+##  NA's   :731    NA's   :1626    NA's   :3648    NA's   :3190    NA's   :3079   
+##       Q240             Q252       
+##  Min.   : 1.000   Min.   : 1.000  
+##  1st Qu.: 4.000   1st Qu.: 3.000  
+##  Median : 5.000   Median : 5.000  
+##  Mean   : 5.666   Mean   : 5.347  
+##  3rd Qu.: 7.000   3rd Qu.: 7.000  
+##  Max.   :10.000   Max.   :10.000  
+##  NA's   :27784    NA's   :3628
+## 0.3 add country name based on ISO3 ccode (for this you need the countrycode package)
+wvs <- wvs %>%
+  mutate(
+    country_name = countrycode(B_COUNTRY_ALPHA, "iso3c", "country.name")
+  ) %>%
+  mutate(
+    country_name = ifelse(B_COUNTRY_ALPHA == "NIR", "Northern Ireland", country_name)
+  ) %>%
+  dplyr::select(-B_COUNTRY_ALPHA)
+## Warning: There was 1 warning in `mutate()`.
+## ℹ In argument: `country_name = countrycode(B_COUNTRY_ALPHA, "iso3c",
+##   "country.name")`.
+## Caused by warning:
+## ! Some values were not matched unambiguously: NIR
+table(wvs$country_name)
+## 
+##             Andorra           Argentina             Armenia           Australia 
+##                1004                1003                1223                1813 
+##          Bangladesh             Bolivia              Brazil              Canada 
+##                1200                2067                1762                4018 
+##               Chile               China            Colombia              Cyprus 
+##                1000                3036                1520                1000 
+##             Czechia             Ecuador               Egypt            Ethiopia 
+##                1200                1200                1200                1230 
+##             Germany              Greece           Guatemala Hong Kong SAR China 
+##                1528                1200                1229                2075 
+##               India           Indonesia                Iran                Iraq 
+##                1692                3200                1499                1200 
+##               Japan              Jordan          Kazakhstan               Kenya 
+##                1353                1203                1276                1266 
+##          Kyrgyzstan             Lebanon               Libya     Macao SAR China 
+##                1200                1200                1196                1023 
+##            Malaysia            Maldives              Mexico            Mongolia 
+##                1313                1039                1741                1638 
+##             Morocco     Myanmar (Burma)         Netherlands         New Zealand 
+##                1200                1200                2145                1057 
+##           Nicaragua             Nigeria    Northern Ireland            Pakistan 
+##                1200                1237                 447                1995 
+##                Peru         Philippines         Puerto Rico             Romania 
+##                1400                1200                1127                1257 
+##              Russia              Serbia           Singapore            Slovakia 
+##                1810                1046                2012                1200 
+##         South Korea              Taiwan          Tajikistan            Thailand 
+##                1245                1223                1200                1500 
+##             Tunisia              Turkey             Ukraine      United Kingdom 
+##                1208                2415                1289                2609 
+##       United States             Uruguay          Uzbekistan           Venezuela 
+##                2596                1000                1250                1190 
+##             Vietnam            Zimbabwe 
+##                1200                1215
+At this stage, we have to have binary amounts.
+wvs <- wvs %>%
+  mutate(
+    Q260 = factor(case_when(
+      Q260 == 1 ~ 0,
+      Q260 == 2 ~ 1,
+      TRUE ~ NA_real_),levels = c(0, 1)),
+    Q263 = factor(case_when(
+      Q263 == 1 ~ 1,
+      Q263 == 2 ~ 0,
+      TRUE ~ NA_real_
+    ), levels = c(0, 1)),
+    Q71 = factor(case_when(
+      Q71 %in% c(1, 2) ~ 1,
+      Q71 %in% c(3, 4) ~ 0,
+      TRUE ~ NA_real_
+    ), levels = c(0, 1)),
+    Q131 = factor(case_when(
+      Q131 %in% c(1, 2) ~ 1,
+      Q131 %in% c(3, 4) ~ 0,
+      TRUE ~ NA_real_
+    ), levels = c(0, 1)),
+    Q148 = factor(case_when(
+      Q148 %in% c(1, 2) ~ 1,
+      Q148 %in% c(3, 4) ~ 0,
+      TRUE ~ NA_real_
+    ), levels = c(0, 1)),
+    Q197 = factor(case_when(
+      Q197 %in% c(1, 2) ~ 1,
+      Q197 %in% c(3, 4) ~ 0,
+      TRUE ~ NA_real_
+    ), levels = c(0,1)),
+    Q199 = factor(case_when(
+      Q199 %in% c(1, 2) ~ 1,
+      Q199 %in% c(3, 4) ~ 0,
+      TRUE ~ NA_real_
+    ), levels = c(0, 1))
+  )
+## 0.5 re-scale GDP and population -> otherwise the coefficients will be very small
+summary(wvs$GDPpercap1) # transform to "in thousands"
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##       0    8996   16785   26035   42576  129103     447
+summary(wvs$popWB2019) # transform to "in millions"
+##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max.      NA's 
+## 7.714e+04 1.067e+07 3.759e+07 1.317e+08 1.081e+08 1.398e+09      1670
+wvs <- wvs %>%
+  mutate(
+    GDPpercap1 = ifelse(GDPpercap1 >= 0, GDPpercap1 / 1000, NA),
+    popWB2019 = ifelse(popWB2019 > 0, popWB2019 / 1000000, NA)
+  )
+## 0.6 save data
+write.csv(wvs, "wvs_ready_for_FDA.csv")
+#### Step 1 - variable selection & description ####
+head(wvs)
+##   Q250 GDPpercap1 popWB2019 internetusers urbanpop freestfh durable Q260 Q262
+## 1    8          0  0.077142          91.6    87.98       94      NA    1   60
+## 2   10          0  0.077142          91.6    87.98       94      NA    0   47
+## 3   10          0  0.077142          91.6    87.98       94      NA    0   48
+## 4    7          0  0.077142          91.6    87.98       94      NA    1   62
+## 5    8          0  0.077142          91.6    87.98       94      NA    0   49
+## 6   10          0  0.077142          91.6    87.98       94      NA    1   51
+##   Q263 Q49 Q71 Q112 Q131 Q148 Q163 Q184 Q192 Q197 Q199 Q206 Q207 Q209 Q211 Q240
+## 1    0  10   1    2    1    0    6    2    1    0    1    5    5    2    3    6
+## 2    1   9   0   10    1    0   10    9    1    0    0    1    1    1    2    5
+## 3    0   9   0    7    1    0    5    5    1    0    0    2    5    1    1    7
+## 4    0   8   0    5    1    0    6    4    1    0    1    5    5    2    2    5
+## 5    0   7   1    5    1    0    6    5    1    0    1    2    2    1    1    6
+## 6    0  10   1    6    1    1   10    1    1    0    0    5    5    1    2   NA
+##   Q252 country_name
+## 1    8      Andorra
+## 2    6      Andorra
+## 3    3      Andorra
+## 4    6      Andorra
+## 5    7      Andorra
+## 6   10      Andorra
+str(wvs)
+## 'data.frame':    97220 obs. of  27 variables:
+##  $ Q250         : int  8 10 10 7 8 10 7 10 10 5 ...
+##  $ GDPpercap1   : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ popWB2019    : num  0.0771 0.0771 0.0771 0.0771 0.0771 ...
+##  $ internetusers: num  91.6 91.6 91.6 91.6 91.6 91.6 91.6 91.6 91.6 91.6 ...
+##  $ urbanpop     : num  88 88 88 88 88 ...
+##  $ freestfh     : int  94 94 94 94 94 94 94 94 94 94 ...
+##  $ durable      : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ Q260         : Factor w/ 2 levels "0","1": 2 1 1 2 1 2 2 1 2 2 ...
+##  $ Q262         : int  60 47 48 62 49 51 33 55 40 38 ...
+##  $ Q263         : Factor w/ 2 levels "0","1": 1 2 1 1 1 1 1 1 1 1 ...
+##  $ Q49          : int  10 9 9 8 7 10 5 8 8 10 ...
+##  $ Q71          : Factor w/ 2 levels "0","1": 2 1 1 1 2 2 NA 1 1 2 ...
+##  $ Q112         : int  2 10 7 5 5 6 7 8 5 10 ...
+##  $ Q131         : Factor w/ 2 levels "0","1": 2 2 2 2 2 2 2 2 2 2 ...
+##  $ Q148         : Factor w/ 2 levels "0","1": 1 1 1 1 1 2 1 1 1 1 ...
+##  $ Q163         : int  6 10 5 6 6 10 7 9 8 2 ...
+##  $ Q184         : int  2 9 5 4 5 1 10 6 5 8 ...
+##  $ Q192         : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ Q197         : Factor w/ 2 levels "0","1": 1 1 1 1 1 1 1 1 1 1 ...
+##  $ Q199         : Factor w/ 2 levels "0","1": 2 1 1 2 2 1 1 1 1 1 ...
+##  $ Q206         : int  5 1 2 5 2 5 1 1 5 4 ...
+##  $ Q207         : int  5 1 5 5 2 5 1 1 5 1 ...
+##  $ Q209         : int  2 1 1 2 1 1 1 1 2 2 ...
+##  $ Q211         : int  3 2 1 2 1 2 2 1 1 1 ...
+##  $ Q240         : int  6 5 7 5 6 NA 1 8 5 5 ...
+##  $ Q252         : int  8 6 3 6 7 10 4 7 5 7 ...
+##  $ country_name : chr  "Andorra" "Andorra" "Andorra" "Andorra" ...
+dim(wvs)
+## [1] 97220    27
+summary(wvs)
+##       Q250          GDPpercap1        popWB2019         internetusers  
+##  Min.   : 1.000   Min.   :  0.000   Min.   :   0.0771   Min.   :15.00  
+##  1st Qu.: 7.000   1st Qu.:  8.995   1st Qu.:  10.6697   1st Qu.:46.90  
+##  Median : 9.000   Median : 16.785   Median :  37.5893   Median :67.50  
+##  Mean   : 8.382   Mean   : 26.035   Mean   : 131.6989   Mean   :63.65  
+##  3rd Qu.:10.000   3rd Qu.: 42.576   3rd Qu.: 108.1166   3rd Qu.:84.60  
+##  Max.   :10.000   Max.   :129.103   Max.   :1397.7150   Max.   :95.90  
+##  NA's   :1800     NA's   :447       NA's   :1670        NA's   :3820   
+##     urbanpop         freestfh        durable         Q260      
+##  Min.   : 21.23   Min.   : 9.00   Min.   :  0.00   0   :45995  
+##  1st Qu.: 54.08   1st Qu.:32.00   1st Qu.: 13.00   1   :51130  
+##  Median : 74.59   Median :61.00   Median : 26.00   NA's:   95  
+##  Mean   : 68.50   Mean   :58.59   Mean   : 43.03               
+##  3rd Qu.: 83.65   3rd Qu.:86.00   3rd Qu.: 61.00               
+##  Max.   :100.00   Max.   :99.00   Max.   :209.00               
+##  NA's   :1670     NA's   :2597    NA's   :7911                 
+##       Q262          Q263            Q49           Q71             Q112       
+##  Min.   : 16.00   0   : 5661   Min.   : 1.000   0   :51087   Min.   : 1.000  
+##  1st Qu.: 29.00   1   :91175   1st Qu.: 6.000   1   :42996   1st Qu.: 6.000  
+##  Median : 41.00   NA's:  384   Median : 7.000   NA's: 3137   Median : 8.000  
+##  Mean   : 43.18                Mean   : 7.062                Mean   : 7.598  
+##  3rd Qu.: 55.00                3rd Qu.: 9.000                3rd Qu.:10.000  
+##  Max.   :103.00                Max.   :10.000                Max.   :10.000  
+##  NA's   :511                   NA's   :520                   NA's   :1645    
+##    Q131         Q148            Q163             Q184             Q192       
+##  0   :23508   0   :38956   Min.   : 1.000   Min.   : 1.000   Min.   : 1.000  
+##  1   :73042   1   :51370   1st Qu.: 5.000   1st Qu.: 1.000   1st Qu.: 1.000  
+##  NA's:  670   NA's: 6894   Median : 8.000   Median : 2.000   Median : 1.000  
+##                            Mean   : 7.095   Mean   : 3.554   Mean   : 1.789  
+##                            3rd Qu.: 9.000   3rd Qu.: 5.000   3rd Qu.: 1.000  
+##                            Max.   :10.000   Max.   :10.000   Max.   :10.000  
+##                            NA's   :2711     NA's   :2275     NA's   :4523    
+##    Q197         Q199            Q206            Q207            Q209      
+##  0   :60495   0   :52482   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+##  1   :32387   1   :44007   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000  
+##  NA's: 4338   NA's:  731   Median :2.000   Median :2.000   Median :2.000  
+##                            Mean   :2.516   Mean   :2.678   Mean   :2.179  
+##                            3rd Qu.:5.000   3rd Qu.:5.000   3rd Qu.:3.000  
+##                            Max.   :5.000   Max.   :5.000   Max.   :3.000  
+##                            NA's   :1626    NA's   :3648    NA's   :3190   
+##       Q211            Q240             Q252        country_name      
+##  Min.   :1.000   Min.   : 1.000   Min.   : 1.000   Length:97220      
+##  1st Qu.:2.000   1st Qu.: 4.000   1st Qu.: 3.000   Class :character  
+##  Median :3.000   Median : 5.000   Median : 5.000   Mode  :character  
+##  Mean   :2.357   Mean   : 5.666   Mean   : 5.347                     
+##  3rd Qu.:3.000   3rd Qu.: 7.000   3rd Qu.: 7.000                     
+##  Max.   :3.000   Max.   :10.000   Max.   :10.000                     
+##  NA's   :3079    NA's   :27784    NA's   :3628
+attach(wvs)
+colSums(is.na(wvs))
+##          Q250    GDPpercap1     popWB2019 internetusers      urbanpop 
+##          1800           447          1670          3820          1670 
+##      freestfh       durable          Q260          Q262          Q263 
+##          2597          7911            95           511           384 
+##           Q49           Q71          Q112          Q131          Q148 
+##           520          3137          1645           670          6894 
+##          Q163          Q184          Q192          Q197          Q199 
+##          2711          2275          4523          4338           731 
+##          Q206          Q207          Q209          Q211          Q240 
+##          1626          3648          3190          3079         27784 
+##          Q252  country_name 
+##          3628             0
+The missing rates, from now we should handle them.
+missing_rate_per_column <- colSums(is.na(wvs)) / nrow(wvs)
+missing_rate_per_column
+##          Q250    GDPpercap1     popWB2019 internetusers      urbanpop 
+##  0.0185147089  0.0045978194  0.0171775355  0.0392923267  0.0171775355 
+##      freestfh       durable          Q260          Q262          Q263 
+##  0.0267126106  0.0813721456  0.0009771652  0.0052561201  0.0039498046 
+##           Q49           Q71          Q112          Q131          Q148 
+##  0.0053486937  0.0322670232  0.0169203868  0.0068915861  0.0709113351 
+##          Q163          Q184          Q192          Q197          Q199 
+##  0.0278852088  0.0234005349  0.0465233491  0.0446204485  0.0075190290 
+##          Q206          Q207          Q209          Q211          Q240 
+##  0.0167249537  0.0375231434  0.0328121786  0.0316704382  0.2857848179 
+##          Q252  country_name 
+##  0.0373174244  0.0000000000
+Now, we handle missing values. Based on their proportion, we make decision to eliminate them or do other tasks to them.
+
+For Q260 or gender we eliminate missing variables.
+##For Q260 
+wvs_clean <- wvs %>%
+  filter(!is.na(wvs$Q260))
+Q250 is dependent value, freestfh is political freedom, GDPpercap1 and urbanpop are the variables that I found them more important with more proportion. Here I used KNN methods to deal with missings.
+##For Q250 
+imputed_data <- kNN(wvs_clean, variable = "Q250", k = 5)
+wvs_complete <- imputed_data
+#For freestfh
+imputeed_data <- kNN(wvs_complete, variable = "freestfh", k = 5)
+wvs_completee <- imputeed_data
+##For GDPpercap1
+imputed_data1 <- kNN(wvs_completee, variable = "GDPpercap1", k = 5)
+wvs_completeee <- imputed_data1
+##for urbanpop
+imputeed_dataf <- kNN(wvs_completeee, variable = "urbanpop", k = 5)
+wvs_completeeee <- imputeed_dataf
+
+Q262 or age: I deal with its missing values by put the median of columns in it because the high numbers of outliers. (see boxplot)
+##For Q262
+boxplot(wvs_completeeee$Q262, main = "Boxplot of age", ylab = "Age", col = "lightblue")
+ 
+wvs_completeeee$Q262[is.na(wvs_completeeee$Q262)] <- mean(wvs_completeeee$Q262, na.rm = TRUE)
+
+# بررسی تعداد داده‌های گمشده بعد از پر کردن
+colSums(is.na(wvs_completeeee))
+##           Q250     GDPpercap1      popWB2019  internetusers       urbanpop 
+##              0              0           1670           3817              0 
+##       freestfh        durable           Q260           Q262           Q263 
+##              0           7904              0              0            363 
+##            Q49            Q71           Q112           Q131           Q148 
+##            512           3127           1631            656           6877 
+##           Q163           Q184           Q192           Q197           Q199 
+##           2695           2259           4511           4321            716 
+##           Q206           Q207           Q209           Q211           Q240 
+##           1611           3623           3176           3064          27756 
+##           Q252   country_name       Q250_imp   freestfh_imp GDPpercap1_imp 
+##           3614              0              0              0              0 
+##   urbanpop_imp 
+##              0
+Here is missing rates of the main columns. After that we try to deal with other values as well.
+missing_rate_per_column <- colSums(is.na(wvs_completeeee)) / nrow(wvs_completeeee)
+missing_rate_per_column
+##           Q250     GDPpercap1      popWB2019  internetusers       urbanpop 
+##    0.000000000    0.000000000    0.017194337    0.039299871    0.000000000 
+##       freestfh        durable           Q260           Q262           Q263 
+##    0.000000000    0.081379665    0.000000000    0.000000000    0.003737452 
+##            Q49            Q71           Q112           Q131           Q148 
+##    0.005271557    0.032195624    0.016792793    0.006754183    0.070805663 
+##           Q163           Q184           Q192           Q197           Q199 
+##    0.027747748    0.023258687    0.046445302    0.044489060    0.007371943 
+##           Q206           Q207           Q209           Q211           Q240 
+##    0.016586873    0.037302445    0.032700129    0.031546976    0.285776062 
+##           Q252   country_name       Q250_imp   freestfh_imp GDPpercap1_imp 
+##    0.037209781    0.000000000    0.000000000    0.000000000    0.000000000 
+##   urbanpop_imp 
+##    0.000000000
+##Less than 0.08 eliminate, between 0.08 and 0.2 convert to median
+#Else KNN
+# محاسبه درصد داده‌های گمشده برای هر متغیر
+percent_missing <- colSums(is.na(wvs_completeeee)) / nrow(wvs_completeeee)
+
+for (var in names(percent_missing)) {
+  # دریافت درصد گمشده برای متغیر خاص
+  missing_percentage <- percent_missing[var]
+  
+  # بررسی اینکه درصد گمشده NA نباشد
+  if (!is.na(missing_percentage)) {
+    # اگر درصد داده‌های گمشده کمتر از 0.02 باشد، رکوردها را حذف کنید
+    if (0 < missing_percentage & missing_percentage < 0.08) {
+      wvs_completeeee <- wvs_completeeee[!is.na(wvs_completeeee[[var]]), ]
+      
+      # اگر درصد داده‌های گمشده بین 0.02 تا 0.04 باشد
+    } else if (missing_percentage >= 0.08 & missing_percentage <= 0.2) {
+      # بررسی اینکه داده‌ها عددی باشند
+      if (is.numeric(wvs_completeeee[[var]])) {
+        median_value <- median(wvs_completeeee[[var]], na.rm = TRUE)
+        wvs_completeeee[[var]][is.na(wvs_completeeee[[var]])] <- median_value
+      } else {
+        # برای متغیرهای کیفی
+        mode_value <- names(sort(table(wvs_completeeee[[var]]), decreasing = TRUE))[1]
+        wvs_completeeee[[var]][is.na(wvs_completeeee[[var]])] <- mode_value
+      }
+      # اگر درصد داده‌های گمشده بیشتر از 0.04 باشد، از KNN برای پر کردن استفاده کنید
+    } else if (missing_percentage > 0.2) {
+      # استفاده از KNN برای پر کردن داده‌های گمشده
+      library(VIM)
+      wvs_completeeee <- kNN(wvs_completeeee, variable = var, k = 5)
+    }
+  }
+}
+percent_missing <- colSums(is.na(wvs_completeeee)) / nrow(wvs_completeeee)
+percent_missing
+##           Q250     GDPpercap1      popWB2019  internetusers       urbanpop 
+##              0              0              0              0              0 
+##       freestfh        durable           Q260           Q262           Q263 
+##              0              0              0              0              0 
+##            Q49            Q71           Q112           Q131           Q148 
+##              0              0              0              0              0 
+##           Q163           Q184           Q192           Q197           Q199 
+##              0              0              0              0              0 
+##           Q206           Q207           Q209           Q211           Q240 
+##              0              0              0              0              0 
+##           Q252   country_name       Q250_imp   freestfh_imp GDPpercap1_imp 
+##              0              0              0              0              0 
+##   urbanpop_imp       Q240_imp 
+##              0              0
+wvs_completeeee$Q260 <- as.factor(wvs_completeeee$Q260)
+# مدل رگرسیون خطی
+library(MASS)
+## 
+## Attaching package: 'MASS'
+## The following object is masked from 'package:dplyr':
+## 
+##     select
+model <- lm(internetusers ~ . , data = wvs_completeeee)
+summary(model)
+## 
+## Call:
+## lm(formula = internetusers ~ ., data = wvs_completeeee)
+## 
+## Residuals:
+##        Min         1Q     Median         3Q        Max 
+## -2.721e-09 -1.800e-13  0.000e+00  1.900e-13  2.170e-09 
+## 
+## Coefficients: (8 not defined because of singularities)
+##                                   Estimate Std. Error    t value Pr(>|t|)    
+## (Intercept)                      3.050e+01  1.835e-12  1.662e+13   <2e-16 ***
+## Q250                            -2.605e-12  3.234e-14 -8.057e+01   <2e-16 ***
+## GDPpercap1                      -1.482e+00  4.060e-14 -3.650e+13   <2e-16 ***
+## popWB2019                       -8.181e-01  4.557e-14 -1.795e+13   <2e-16 ***
+## urbanpop                         1.382e-01  4.965e-14  2.783e+12   <2e-16 ***
+## freestfh                        -4.879e-02  1.849e-14 -2.638e+12   <2e-16 ***
+## durable                          1.985e+00  7.448e-14  2.665e+13   <2e-16 ***
+## Q2601                            1.330e-14  1.294e-13  1.030e-01   0.9181    
+## Q262                             2.358e-15  4.585e-15  5.140e-01   0.6071    
+## Q2631                            9.947e-13  3.048e-13  3.263e+00   0.0011 ** 
+## Q49                             -1.181e-15  3.118e-14 -3.800e-02   0.9698    
+## Q711                             2.008e-13  1.535e-13  1.308e+00   0.1909    
+## Q112                            -6.345e-14  3.137e-14 -2.022e+00   0.0431 *  
+## Q1311                            6.860e-14  1.595e-13  4.300e-01   0.6672    
+## Q1481                            1.444e-13  1.542e-13  9.370e-01   0.3490    
+## Q163                             3.562e-14  2.732e-14  1.304e+00   0.1923    
+## Q184                             1.881e-14  2.680e-14  7.020e-01   0.4829    
+## Q192                            -3.593e-14  3.855e-14 -9.320e-01   0.3514    
+## Q1971                           -9.302e-15  1.461e-13 -6.400e-02   0.9492    
+## Q1991                            1.403e-13  1.398e-13  1.004e+00   0.3156    
+## Q206                             7.044e-14  5.812e-14  1.212e+00   0.2255    
+## Q207                            -6.430e-14  5.489e-14 -1.171e+00   0.2415    
+## Q209                             2.427e-14  1.051e-13  2.310e-01   0.8175    
+## Q211                             2.646e-13  1.037e-13  2.551e+00   0.0108 *  
+## Q240                            -4.604e-14  2.935e-14 -1.569e+00   0.1167    
+## Q252                            -1.558e-14  2.780e-14 -5.610e-01   0.5751    
+## country_nameArgentina            3.653e+01  1.579e-12  2.313e+13   <2e-16 ***
+## country_nameArmenia              1.184e+01  7.912e-13  1.497e+13   <2e-16 ***
+## country_nameBangladesh           1.220e+02  7.502e-12  1.626e+13   <2e-16 ***
+## country_nameBolivia             -4.184e+01  1.001e-12 -4.182e+13   <2e-16 ***
+## country_nameBrazil               1.584e+02  9.039e-12  1.753e+13   <2e-16 ***
+## country_nameCanada              -9.719e+01  7.152e-12 -1.359e+13   <2e-16 ***
+## country_nameChile                3.930e+01  9.158e-13  4.291e+13   <2e-16 ***
+## country_nameColombia            -3.290e+01  8.733e-13 -3.768e+13   <2e-16 ***
+## country_nameCyprus               2.403e+01  3.159e-12  7.607e+12   <2e-16 ***
+## country_nameCzechia              6.662e+01  1.526e-12  4.367e+13   <2e-16 ***
+## country_nameEcuador              1.717e+01  7.638e-13  2.248e+13   <2e-16 ***
+## country_nameEthiopia             8.145e+01  4.628e-12  1.760e+13   <2e-16 ***
+## country_nameGermany              1.486e+02  2.781e-12  5.343e+13   <2e-16 ***
+## country_nameGreece               5.769e+00  1.777e-12  3.246e+12   <2e-16 ***
+## country_nameGuatemala            1.318e+01  7.279e-13  1.810e+13   <2e-16 ***
+## country_nameHong Kong SAR China  9.275e+01  2.006e-12  4.623e+13   <2e-16 ***
+## country_nameIndia                9.960e+02  5.708e-11  1.745e+13   <2e-16 ***
+## country_nameIndonesia            2.064e+02  1.157e-11  1.785e+13   <2e-16 ***
+## country_nameIran                 6.995e+01  4.711e-12  1.485e+13   <2e-16 ***
+## country_nameIraq                 5.166e+01  2.985e-12  1.730e+13   <2e-16 ***
+## country_nameJapan                8.247e+01  2.468e-12  3.342e+13   <2e-16 ***
+## country_nameJordan              -8.507e+00  1.312e-12 -6.483e+12   <2e-16 ***
+## country_nameKenya                3.775e+00  1.260e-12  2.997e+12   <2e-16 ***
+## country_nameKyrgyzstan           3.844e+00  8.161e-13  4.711e+12   <2e-16 ***
+## country_nameLebanon              4.010e+01  1.718e-12  2.334e+13   <2e-16 ***
+## country_nameLibya               -4.400e+01  1.483e-12 -2.967e+13   <2e-16 ***
+## country_nameMalaysia             9.269e+01  2.138e-12  4.337e+13   <2e-16 ***
+## country_nameMaldives             5.125e+00  2.311e-12  2.218e+12   <2e-16 ***
+## country_nameMexico               1.201e+02  5.785e-12  2.077e+13   <2e-16 ***
+## country_nameMongolia            -4.214e+01  9.490e-13 -4.441e+13   <2e-16 ***
+## country_nameMorocco             -3.637e+01  1.390e-12 -2.616e+13   <2e-16 ***
+## country_nameMyanmar (Burma)      4.558e+01  2.264e-12  2.013e+13   <2e-16 ***
+## country_nameNetherlands          1.406e+01  3.819e-12  3.682e+12   <2e-16 ***
+## country_nameNew Zealand         -1.577e+02  9.072e-12 -1.738e+13   <2e-16 ***
+## country_nameNicaragua            5.253e-01  1.305e-12  4.024e+11   <2e-16 ***
+## country_nameNigeria              1.731e+02  9.540e-12  1.814e+13   <2e-16 ***
+## country_namePakistan             1.463e+02  9.213e-12  1.588e+13   <2e-16 ***
+## country_namePeru                 2.740e+01  1.851e-12  1.480e+13   <2e-16 ***
+## country_namePhilippines          6.663e+01  3.044e-12  2.189e+13   <2e-16 ***
+## country_nameRomania              5.681e+01  1.494e-12  3.801e+13   <2e-16 ***
+## country_nameRussia               1.667e+02  6.499e-12  2.565e+13   <2e-16 ***
+## country_nameSerbia               4.835e+01  9.249e-13  5.227e+13   <2e-16 ***
+## country_nameSingapore            9.601e+01  4.312e-12  2.227e+13   <2e-16 ***
+## country_nameSlovakia             5.256e+01  2.129e-12  2.469e+13   <2e-16 ***
+## country_nameSouth Korea          1.047e+02  1.649e-12  6.349e+13   <2e-16 ***
+## country_nameTajikistan          -3.869e+01  1.503e-12 -2.574e+13   <2e-16 ***
+## country_nameThailand             9.837e+01  3.298e-12  2.983e+13   <2e-16 ***
+## country_nameTunisia              4.578e+01  1.581e-12  2.895e+13   <2e-16 ***
+## country_nameUkraine              2.431e+01  1.399e-12  1.738e+13   <2e-16 ***
+## country_nameUnited Kingdom      -8.964e+01  6.251e-12 -1.434e+13   <2e-16 ***
+## country_nameUnited States               NA         NA         NA       NA    
+## country_nameUruguay                     NA         NA         NA       NA    
+## country_nameUzbekistan                  NA         NA         NA       NA    
+## country_nameVietnam                     NA         NA         NA       NA    
+## country_nameZimbabwe                    NA         NA         NA       NA    
+## Q250_impTRUE                    -3.792e-14  9.020e-13 -4.200e-02   0.9665    
+## freestfh_impTRUE                        NA         NA         NA       NA    
+## GDPpercap1_impTRUE                      NA         NA         NA       NA    
+## urbanpop_impTRUE                        NA         NA         NA       NA    
+## Q240_impTRUE                     6.550e-14  2.500e-13  2.620e-01   0.7933    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.669e-11 on 69183 degrees of freedom
+## Multiple R-squared:      1,  Adjusted R-squared:      1 
+## F-statistic: 1.896e+27 on 77 and 69183 DF,  p-value: < 2.2e-16
+attach(wvs_completeeee)
+## The following objects are masked from wvs:
+## 
+##     country_name, durable, freestfh, GDPpercap1, internetusers,
+##     popWB2019, Q112, Q131, Q148, Q163, Q184, Q192, Q197, Q199, Q206,
+##     Q207, Q209, Q211, Q240, Q250, Q252, Q260, Q262, Q263, Q49, Q71,
+##     urbanpop
+Here, we start to create forward regression.  Its AIC is become less and this is good. However, we don’t have good R^2 and good R^2 adjust.
+All of the betas are meaningful and reject the assumption of being zero.
+Durable, freestfh or political freedom, urbanpop, popWB2019 and GDPpercap1 and their interaction are meaningful.
+# مدل اولیه (فقط مقدار ثابت)
+null_model <- lm(Q250 ~ 1, data = wvs_completeeee)
+
+# مدل کامل (شامل تمام متغیرها و تعامل)
+full_model <- lm(Q250 ~ GDPpercap1 * urbanpop + freestfh + popWB2019 + durable, data = wvs_completeeee)
+
+# اجرای Forward Selection
+forward_model <- stepAIC(null_model, 
+                         scope = list(lower = null_model, upper = full_model), 
+                         direction = "forward", 
+                         trace = TRUE)
+## Start:  AIC=105216.6
+## Q250 ~ 1
+## 
+##              Df Sum of Sq    RSS    AIC
+## + durable     1   1593.39 314800 104869
+## + freestfh    1   1484.53 314908 104893
+## + GDPpercap1  1     64.10 316329 105205
+## <none>                    316393 105217
+## + popWB2019   1      8.47 316385 105217
+## + urbanpop    1      0.78 316392 105218
+## 
+## Step:  AIC=104868.9
+## Q250 ~ durable
+## 
+##              Df Sum of Sq    RSS    AIC
+## + freestfh    1    405.53 314394 104782
+## + GDPpercap1  1    370.55 314429 104789
+## + urbanpop    1    298.90 314501 104805
+## + popWB2019   1     24.11 314775 104866
+## <none>                    314800 104869
+## 
+## Step:  AIC=104781.6
+## Q250 ~ durable + freestfh
+## 
+##              Df Sum of Sq    RSS    AIC
+## + urbanpop    1    792.55 313602 104609
+## + GDPpercap1  1    659.57 313734 104638
+## + popWB2019   1     11.63 314382 104781
+## <none>                    314394 104782
+## 
+## Step:  AIC=104608.8
+## Q250 ~ durable + freestfh + urbanpop
+## 
+##              Df Sum of Sq    RSS    AIC
+## + popWB2019   1    191.81 313410 104568
+## + GDPpercap1  1    171.59 313430 104573
+## <none>                    313602 104609
+## 
+## Step:  AIC=104568.4
+## Q250 ~ durable + freestfh + urbanpop + popWB2019
+## 
+##              Df Sum of Sq    RSS    AIC
+## + GDPpercap1  1    207.26 313202 104525
+## <none>                    313410 104568
+## 
+## Step:  AIC=104524.6
+## Q250 ~ durable + freestfh + urbanpop + popWB2019 + GDPpercap1
+## 
+##                       Df Sum of Sq    RSS    AIC
+## + GDPpercap1:urbanpop  1    800.01 312402 104349
+## <none>                             313202 104525
+## 
+## Step:  AIC=104349.5
+## Q250 ~ durable + freestfh + urbanpop + popWB2019 + GDPpercap1 + 
+##     urbanpop:GDPpercap1
+# نمایش نتایج
+summary(forward_model)
+## 
+## Call:
+## lm(formula = Q250 ~ durable + freestfh + urbanpop + popWB2019 + 
+##     GDPpercap1 + urbanpop:GDPpercap1, data = wvs_completeeee)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -7.762 -1.118  0.860  1.600  2.284 
+## 
+## Coefficients:
+##                       Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)          8.620e+00  3.867e-02 222.926   <2e-16 ***
+## durable              4.112e-03  2.359e-04  17.428   <2e-16 ***
+## freestfh             8.854e-03  4.548e-04  19.469   <2e-16 ***
+## urbanpop            -1.030e-02  6.667e-04 -15.447   <2e-16 ***
+## popWB2019           -4.367e-04  4.772e-05  -9.152   <2e-16 ***
+## GDPpercap1          -4.055e-02  2.827e-03 -14.347   <2e-16 ***
+## urbanpop:GDPpercap1  3.949e-04  2.965e-05  13.317   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.124 on 69254 degrees of freedom
+## Multiple R-squared:  0.01261,    Adjusted R-squared:  0.01253 
+## F-statistic: 147.4 on 6 and 69254 DF,  p-value: < 2.2e-16
+
+In following sections, we have backward model. We don’t have good R^2 and good R^2 adj again. And we start to eliminate some variables based on AIC.
+# مدل کامل (شامل تمام متغیرها)
+full_model <- lm(Q250 ~ GDPpercap1 * urbanpop + freestfh + popWB2019 + durable, data = wvs_completeeee)
+
+# اجرای Backward Elimination
+backward_model <- stepAIC(full_model, 
+                          direction = "backward", 
+                          trace = TRUE)
+## Start:  AIC=104349.5
+## Q250 ~ GDPpercap1 * urbanpop + freestfh + popWB2019 + durable
+## 
+##                       Df Sum of Sq    RSS    AIC
+## <none>                             312402 104349
+## - popWB2019            1    377.82 312780 104431
+## - GDPpercap1:urbanpop  1    800.01 313202 104525
+## - durable              1   1370.08 313773 104651
+## - freestfh             1   1709.79 314112 104726
+# نمایش نتایج
+summary(backward_model)
+## 
+## Call:
+## lm(formula = Q250 ~ GDPpercap1 * urbanpop + freestfh + popWB2019 + 
+##     durable, data = wvs_completeeee)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -7.762 -1.118  0.860  1.600  2.284 
+## 
+## Coefficients:
+##                       Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)          8.620e+00  3.867e-02 222.926   <2e-16 ***
+## GDPpercap1          -4.055e-02  2.827e-03 -14.347   <2e-16 ***
+## urbanpop            -1.030e-02  6.667e-04 -15.447   <2e-16 ***
+## freestfh             8.854e-03  4.548e-04  19.469   <2e-16 ***
+## popWB2019           -4.367e-04  4.772e-05  -9.152   <2e-16 ***
+## durable              4.112e-03  2.359e-04  17.428   <2e-16 ***
+## GDPpercap1:urbanpop  3.949e-04  2.965e-05  13.317   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.124 on 69254 degrees of freedom
+## Multiple R-squared:  0.01261,    Adjusted R-squared:  0.01253 
+## F-statistic: 147.4 on 6 and 69254 DF,  p-value: < 2.2e-16
+# مدل کامل (شامل تمام متغیرها)
+
+The stepwise, we compare AIC and R^2. Again, the R^2 is not that much good. We examine our model, the model with more variables and less variable to see what will happen. Although AIC of the over model is less, the full model is better because their differences is not that much.
+full_model <- lm(Q250 ~ GDPpercap1 * urbanpop + freestfh + popWB2019 + durable, data = wvs_completeeee)
+
+# اجرای Stepwise Regression
+stepwise_model <- stepAIC(full_model, 
+                          direction = "both", 
+                          trace = TRUE)
+## Start:  AIC=104349.5
+## Q250 ~ GDPpercap1 * urbanpop + freestfh + popWB2019 + durable
+## 
+##                       Df Sum of Sq    RSS    AIC
+## <none>                             312402 104349
+## - popWB2019            1    377.82 312780 104431
+## - GDPpercap1:urbanpop  1    800.01 313202 104525
+## - durable              1   1370.08 313773 104651
+## - freestfh             1   1709.79 314112 104726
+# نمایش نتایج
+summary(stepwise_model)
+## 
+## Call:
+## lm(formula = Q250 ~ GDPpercap1 * urbanpop + freestfh + popWB2019 + 
+##     durable, data = wvs_completeeee)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -7.762 -1.118  0.860  1.600  2.284 
+## 
+## Coefficients:
+##                       Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)          8.620e+00  3.867e-02 222.926   <2e-16 ***
+## GDPpercap1          -4.055e-02  2.827e-03 -14.347   <2e-16 ***
+## urbanpop            -1.030e-02  6.667e-04 -15.447   <2e-16 ***
+## freestfh             8.854e-03  4.548e-04  19.469   <2e-16 ***
+## popWB2019           -4.367e-04  4.772e-05  -9.152   <2e-16 ***
+## durable              4.112e-03  2.359e-04  17.428   <2e-16 ***
+## GDPpercap1:urbanpop  3.949e-04  2.965e-05  13.317   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.124 on 69254 degrees of freedom
+## Multiple R-squared:  0.01261,    Adjusted R-squared:  0.01253 
+## F-statistic: 147.4 on 6 and 69254 DF, p-value: < 2.2e-16
+AIC(forward_model, backward_model, stepwise_model)
+##                df      AIC
+## forward_model   8 300905.7
+## backward_model  8 300905.7
+## stepwise_model  8 300905.7
+##الف) مدل‌های ساده‌تر (Under-Specified Models):
+under_model <- lm(Q250 ~ GDPpercap1 + urbanpop, data = wvs_completeeee)
+summary(under_model)
+## 
+## Call:
+## lm(formula = Q250 ~ GDPpercap1 + urbanpop, data = wvs_completeeee)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.4927 -1.3337  0.6687  1.6203  1.7287 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  8.4378231  0.0298478 282.695  < 2e-16 ***
+## GDPpercap1   0.0024093  0.0004598   5.240 1.61e-07 ***
+## urbanpop    -0.0018932  0.0005134  -3.687 0.000227 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.137 on 69258 degrees of freedom
+## Multiple R-squared:  0.0003988, Adjusted R-squared:  0.00037 
+## F-statistic: 13.82 on 2 and 69258 DF,p-value: 1.002e-06
+
+over_model <- lm(Q250 ~ GDPpercap1 * urbanpop + freestfh + popWB2019 + durable + I(GDPpercap1^2), data = wvs_completeeee)
+summary(over_model)
+## 
+## Call:
+## lm(formula = Q250 ~ GDPpercap1 * urbanpop + freestfh + popWB2019 + 
+##     durable + I(GDPpercap1^2), data = wvs_completeeee)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -7.767 -1.119  0.862  1.597  2.277 
+## 
+## Coefficients:
+##                       Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)          8.635e+00  4.253e-02 203.044   <2e-16 ***
+## GDPpercap1          -4.119e-02  2.924e-03 -14.087   <2e-16 ***
+## urbanpop            -1.063e-02  7.697e-04 -13.806   <2e-16 ***
+## freestfh             8.777e-03  4.638e-04  18.922   <2e-16 ***
+## popWB2019           -4.347e-04  4.778e-05  -9.098   <2e-16 ***
+## durable              4.107e-03  2.360e-04  17.401   <2e-16 ***
+## I(GDPpercap1^2)     -1.718e-05  2.013e-05  -0.853    0.393    
+## GDPpercap1:urbanpop  4.188e-04  4.075e-05  10.276   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.124 on 69253 degrees of freedom
+## Multiple R-squared:  0.01262,    Adjusted R-squared:  0.01252 
+## F-statistic: 126.5 on 7 and 69253 DF, p-value: < 2.2e-16
+final_model <- lm(Q250 ~ GDPpercap1 * urbanpop + freestfh + popWB2019 + durable, data = wvs_completeeee)
+summary(final_model)
+## 
+## Call:
+## lm(formula = Q250 ~ GDPpercap1 * urbanpop + freestfh + popWB2019 + 
+##     durable, data = wvs_completeeee)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -7.762 -1.118  0.860  1.600  2.284 
+## 
+## Coefficients:
+##                       Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)          8.620e+00  3.867e-02 222.926   <2e-16 ***
+## GDPpercap1          -4.055e-02  2.827e-03 -14.347   <2e-16 ***
+## urbanpop            -1.030e-02  6.667e-04 -15.447   <2e-16 ***
+## freestfh             8.854e-03  4.548e-04  19.469   <2e-16 ***
+## popWB2019           -4.367e-04  4.772e-05  -9.152   <2e-16 ***
+## durable              4.112e-03  2.359e-04  17.428   <2e-16 ***
+## GDPpercap1:urbanpop  3.949e-04  2.965e-05  13.317   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.124 on 69254 degrees of freedom
+## Multiple R-squared:  0.01261,    Adjusted R-squared:  0.01253 
+## F-statistic: 147.4 on 6 and 69254 DF, p-value: < 2.2e-16
+AIC(under_model, final_model, over_model)
+##             df      AIC
+## under_model  4 301749.2
+## final_model  8 300905.7
+## over_model   9 300907.0
+
+We should consider outliers in our analysis, there is a large distance in 27398. We can eliminate it to see what changes will happen.
+#Outliers
+plot(final_model, which = 4)  # Cook's Distance
+ 
+# شناسایی نقاط پرت
+cooksd <- cooks.distance(final_model)
+outliers <- which(cooksd > 4 * mean(cooksd, na.rm = TRUE))
+
+# حذف نقاط پرت
+wvs_no_outliers <- wvs_completeeee[-outliers, ]
+
+The outliers have deleted and now we start our analysis again.
+# اجرای مدل مجدد
+final_model_no_outliers <- lm(Q250 ~ GDPpercap1 * urbanpop + freestfh + popWB2019 + durable, data = wvs_no_outliers)
+summary(final_model_no_outliers)
+## 
+## Call:
+## lm(formula = Q250 ~ GDPpercap1 * urbanpop + freestfh + popWB2019 + 
+##     durable, data = wvs_no_outliers)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.6106 -0.8390  0.7022  1.3714  1.8463 
+## 
+## Coefficients:
+##                       Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)          8.885e+00  3.268e-02 271.858  < 2e-16 ***
+## GDPpercap1          -3.181e-02  2.397e-03 -13.274  < 2e-16 ***
+## urbanpop            -7.855e-03  5.657e-04 -13.885  < 2e-16 ***
+## freestfh             4.440e-03  3.864e-04  11.489  < 2e-16 ***
+## popWB2019           -4.006e-04  5.714e-05  -7.011 2.39e-12 ***
+## durable              5.252e-03  2.022e-04  25.975  < 2e-16 ***
+## GDPpercap1:urbanpop  3.021e-04  2.523e-05  11.974  < 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.749 on 65668 degrees of freedom
+## Multiple R-squared:  0.01557,    Adjusted R-squared:  0.01548 
+## F-statistic: 173.1 on 6 and 65668 DF, p-value: < 2.2e-16
+resettest(final_model)
+## 
+## RESET test
+## 
+## data:  final_model
+## RESET = 14.875, df1 = 2, df2 = 69252, p-value = 3.478e-07
+Stargazer(final_model, type = "text", title = "Final Regression Results")
+## 
+## Final Regression Results
+## ===============================================
+##                         Dependent variable:    
+##                     ---------------------------
+##                                Q250            
+## -----------------------------------------------
+## GDPpercap1                   -0.041***         
+##                               (0.003)          
+##                                                
+## urbanpop                     -0.010***         
+##                               (0.001)          
+##                                                
+## freestfh                     0.009***          
+##                              (0.0005)          
+##                                                
+## popWB2019                   -0.0004***         
+##                              (0.00005)         
+##                                                
+## durable                      0.004***          
+##                              (0.0002)          
+##                                                
+## GDPpercap1:urbanpop          0.0004***         
+##                              (0.00003)         
+##                                                
+## Constant                     8.620***          
+##                               (0.039)          
+##                                                
+## -----------------------------------------------
+## Observations                  69,261           
+## R2                             0.013           
+## Adjusted R2                    0.013           
+## Residual Std. Error     2.124 (df = 69254)     
+## F Statistic         147.439*** (df = 6; 69254) 
+## ===============================================
+## Note:               *p<0.1; **p<0.05; ***p<0.01
+
+Ordinal logistic regression, Q250 is ordinal variable.
+library(MASS)
+ordinal_model <- polr(as.factor(Q250) ~ GDPpercap1 + urbanpop + freestfh, data = wvs_completeeee, method = "logistic")
+summary(ordinal_model)
+## 
+## Re-fitting to get Hessian
+## Call:
+## polr(formula = as.factor(Q250) ~ GDPpercap1 + urbanpop + freestfh, 
+##     data = wvs_completeeee, method = "logistic")
+## 
+## Coefficients:
+##                Value Std. Error t value
+## GDPpercap1 -0.003093  0.0003982  -7.767
+## urbanpop   -0.005029  0.0004726 -10.642
+## freestfh    0.006703  0.0003164  21.189
+## 
+## Intercepts:
+##      Value     Std. Error t value  
+## 1|2    -3.9861    0.0384  -103.6750
+## 2|3    -3.6259    0.0353  -102.6103
+## 3|4    -3.2562    0.0329   -98.8476
+## 4|5    -2.8898    0.0312   -92.6351
+## 5|6    -1.9973    0.0287   -69.5299
+## 6|7    -1.5167    0.0281   -54.0449
+## 7|8    -1.0439    0.0277   -37.7047
+## 8|9    -0.4067    0.0274   -14.8236
+## 9|10    0.0767    0.0274     2.8044
+## 
+## Residual Deviance: 230215.51 
+## AIC: 230239.51
+interaction_model <- lm(Q250 ~ GDPpercap1 * urbanpop + freestfh, data = wvs_completeeee)
+summary(interaction_model)
+## 
+## Call:
+## lm(formula = Q250 ~ GDPpercap1 * urbanpop + freestfh, data = wvs_completeeee)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.7330 -1.1838  0.8046  1.5750  2.2246 
+## 
+## Coefficients:
+##                       Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)          8.4379125  0.0360400 234.126   <2e-16 ***
+## GDPpercap1          -0.0261951  0.0027155  -9.647   <2e-16 ***
+## urbanpop            -0.0086852  0.0006371 -13.632   <2e-16 ***
+## freestfh             0.0100014  0.0004361  22.932   <2e-16 ***
+## GDPpercap1:urbanpop  0.0002831  0.0000290   9.762   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.129 on 69256 degrees of freedom
+## Multiple R-squared:  0.008024,   Adjusted R-squared:  0.007966 
+## F-statistic:   140 on 4 and 69256 DF,  p-value: < 2.2e-16
+We understand that none of regression was good. Therefore, we use decision tree for our analysis.
+
+
+In code bellow freesfh has the most impact on independent variable (67). GPDpercap1 is the next one and its (27). 
+#install.packages("rpart")  # نصب بسته rpart
+#install.packages("rpart.plot")  # برای ترسیم درخت تصمیم
+library(rpart)
+library(rpart.plot)
+## Warning: package 'rpart.plot' was built under R version 4.4.2
+# ایجاد مدل درخت تصمیم‌گیری
+tree_model <- rpart(Q250 ~ GDPpercap1 + popWB2019 + urbanpop + freestfh + Q260, 
+                    data = wvs_clean, 
+                    method = "anova")  # method = "anova" برای پیش‌بینی متغیرهای پیوسته
+summary(tree_model)
+## Call:
+## rpart(formula = Q250 ~ GDPpercap1 + popWB2019 + urbanpop + freestfh + 
+##     Q260, data = wvs_clean, method = "anova")
+##   n=95341 (1784 observations deleted due to missingness)
+## 
+##          CP nsplit rel error    xerror        xstd
+## 1 0.0131233      0 1.0000000 1.0000169 0.006181868
+## 2 0.0100000      1 0.9868767 0.9869054 0.006059776
+## 
+## Variable importance
+##   freestfh GDPpercap1  popWB2019   urbanpop 
+##         67         27          4          3 
+## 
+## Node number 1: 95341 observations,    complexity param=0.0131233
+##   mean=8.382396, MSE=4.508434 
+##   left son=2 (76223 obs) right son=3 (19118 obs)
+##   Primary splits:
+##       freestfh   < 92        to the left,  improve=0.0164268400, (2559 missing)
+##       GDPpercap1 < 3.23665   to the right, improve=0.0069826370, (439 missing)
+##       urbanpop   < 97.715    to the right, improve=0.0038083990, (1662 missing)
+##       popWB2019  < 10.69302  to the left,  improve=0.0026390160, (1662 missing)
+##       Q260       splits as  RL, improve=0.0001300367, (0 missing)
+##   Surrogate splits:
+##       GDPpercap1 < 43.13231  to the left,  agree=0.884, adj=0.405, (2120 split)
+##       popWB2019  < 0.3040475 to the right, agree=0.816, adj=0.055, (0 split)
+##       urbanpop   < 81.455    to the left,  agree=0.812, adj=0.038, (0 split)
+## 
+## Node number 2: 76223 observations
+##   mean=8.260578, MSE=4.837784 
+## 
+## Node number 3: 19118 observations
+##   mean=8.868082, MSE=2.900267
+# ترسیم درخت
+rpart.plot(tree_model, type = 4, extra = 101)
+ 
+# پیش‌بینی‌ها را با استفاده از مدل درختی انجام دهید
+predictions <- predict(tree_model, newdata = wvs_clean)
+
+# مقایسه پیش‌بینی‌ها با مقادیر واقعی
+Here we see how predicted values and real values are close to each other!
+plot(wvs_clean$Q250, predictions, main = "Actual vs Predicted", xlab = "Actual Q250", ylab = "Predicted Q250")
+ 
+# ایجاد مدل درختی با تنظیمات اضافی
+tree_model2 <- rpart(Q250 ~ GDPpercap1 + popWB2019 + urbanpop + freestfh + Q260, 
+                     data = wvs_clean,
+                     method = "anova",
+                     control = rpart.control(minsplit = 10, cp = 0.01))  # تنظیمات
+
+We can do better analysis with random forest but it takes lots of time to run!
